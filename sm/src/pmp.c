@@ -68,7 +68,7 @@ static inline int region_is_napot_all(region_id i)
 {
   return regions[i].addr == 0 && regions[i].size == -1UL;
 }
-
+// how to get the pmpaddr value based on the base address
 static inline uintptr_t region_pmpaddr_val(region_id i)
 {
   if(region_is_napot_all(i))
@@ -246,6 +246,7 @@ int pmp_set_keystone(int region_idx, uint8_t perm)
   uintptr_t pmpcfg = region_pmpcfg_val(region_idx, reg_idx, perm_bits);
   uintptr_t pmpaddr;
 
+  // this should be careful
   pmpaddr = region_pmpaddr_val(region_idx);
 
   //sbi_printf("pmp_set() [hart %d]: reg[%d], mode[%s], range[0x%lx-0x%lx], perm[0x%x]\r\n",

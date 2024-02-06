@@ -115,9 +115,10 @@ void sm_print_cert()
 }
 */
 
+// entry point from sbi_init <bootloader> jumps here as next stage
 void sm_init(bool cold_boot)
 {
-	// initialize SMM
+	// initialize SM
   if (cold_boot) {
     /* only the cold-booting hart will execute these */
     sbi_printf("[SM] Initializing ... hart [%lx]\n", csr_read(mhartid));
