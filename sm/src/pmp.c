@@ -2,7 +2,7 @@
 // Copyright (c) 2018, The Regents of the University of California (Regents).
 // All Rights Reserved. See LICENSE for license details.
 //------------------------------------------------------------------------------
-#include "assert.h"
+#include "sm_assert.h"
 #include "pmp.h"
 #include "cpu.h"
 #include "safe_math_util.h"
@@ -13,6 +13,13 @@
 #include <sbi/riscv_asm.h>
 #include <sbi/riscv_locks.h>
 #include <sbi/riscv_atomic.h>
+
+#ifndef TARGET_PLATFORM_HEADER
+#error "SM requires a defined platform to build"
+#endif
+
+// Special target platform header, set by configure script
+#include TARGET_PLATFORM_HEADER
 
 /* PMP global spin locks */
 static spinlock_t pmp_lock = SPIN_LOCK_INITIALIZER;
@@ -61,7 +68,7 @@ static inline int region_is_napot_all(region_id i)
 {
   return regions[i].addr == 0 && regions[i].size == -1UL;
 }
-
+// how to get the pmpaddr value based on the base address
 static inline uintptr_t region_pmpaddr_val(region_id i)
 {
   if(region_is_napot_all(i))
@@ -124,17 +131,17 @@ static int search_rightmost_unset(uint32_t bitmap, int max, uint32_t mask)
   return -1;
 }
 
-static region_id get_free_region_idx()
+static region_id get_free_region_idx(void)
 {
   return search_rightmost_unset(region_def_bitmap, PMP_MAX_N_REGION, 0x1);
 }
 
-static pmpreg_id get_free_reg_idx()
+static pmpreg_id get_free_reg_idx(void)
 {
   return search_rightmost_unset(reg_bitmap, PMP_N_REG, 0x1);
 }
 
-static pmpreg_id get_conseq_free_reg_idx()
+static pmpreg_id get_conseq_free_reg_idx(void)
 {
   return search_rightmost_unset(reg_bitmap, PMP_N_REG, 0x3);
 }
@@ -214,7 +221,7 @@ int pmp_set_global(int region_idx, uint8_t perm)
   return SBI_ERR_SM_PMP_SUCCESS;
 }
 
-void pmp_init()
+void pmp_init(void)
 {
   uintptr_t pmpaddr = 0;
   uintptr_t pmpcfg = 0;
@@ -239,6 +246,7 @@ int pmp_set_keystone(int region_idx, uint8_t perm)
   uintptr_t pmpcfg = region_pmpcfg_val(region_idx, reg_idx, perm_bits);
   uintptr_t pmpaddr;
 
+  // this should be careful
   pmpaddr = region_pmpaddr_val(region_idx);
 
   //sbi_printf("pmp_set() [hart %d]: reg[%d], mode[%s], range[0x%lx-0x%lx], perm[0x%x]\r\n",
