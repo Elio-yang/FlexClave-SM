@@ -20,7 +20,7 @@ static spinlock_t pmp_lock = SPIN_LOCK_INITIALIZER;
 /* PMP region getter/setters */
 static struct pmp_region regions[PMP_MAX_N_REGION];
 static uint32_t reg_bitmap = 0;
-static uint32_t region_def_bitmap = 0;
+static uint32_t region_def_bitmap = 0;          
 
 static inline int region_register_idx(region_id i)
 {

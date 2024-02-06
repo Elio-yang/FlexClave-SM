@@ -14,7 +14,7 @@ if (RISCV32)
 else ()
   SET(CMAKE_C_COMPILER riscv64-unknown-linux-gnu-gcc)
   SET(CROSS_COMPILE riscv64-unknown-elf-)
-  SET(QEMU qemu-riscv64)
+  SET(QEMU qemu-system-riscv64)
   SET(LIBCMOCKA ../cmocka/libcmocka-static.a)
 endif()
 

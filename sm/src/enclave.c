@@ -337,6 +337,7 @@ static int is_create_args_valid(struct keystone_sbi_create_t* args)
 unsigned long create_enclave(unsigned long *eidptr, struct keystone_sbi_create_t create_args)
 {
   /* EPM and UTM parameters */
+
   uintptr_t base = create_args.epm_region.paddr;
   size_t size = create_args.epm_region.size;
   uintptr_t utbase = create_args.utm_region.paddr;

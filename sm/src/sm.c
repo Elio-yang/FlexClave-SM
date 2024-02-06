@@ -126,11 +126,12 @@ void sm_print_cert()
 
 void sm_init(bool cold_boot)
 {
+
+
 	// initialize SMM
   if (cold_boot) {
     /* only the cold-booting hart will execute these */
     sbi_printf("[SM] Initializing ... hart [%lx]\n", csr_read(mhartid));
-
     sbi_ecall_register_extension(&ecall_keystone_enclave);
 
     sm_region_id = smm_init();
@@ -165,6 +166,8 @@ void sm_init(bool cold_boot)
     mb();
   }
 
+  // pmp test here
+
   /* below are executed by all harts */
   pmp_init();
   pmp_set_keystone(sm_region_id, PMP_NO_PERM);
@@ -179,6 +182,7 @@ void sm_init(bool cold_boot)
   sbi_printf("[SM] Keystone security monitor has been initialized!\n");
 
   sm_print_hash();
+  
 
   return;
   // for debug
