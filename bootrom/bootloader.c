@@ -30,6 +30,8 @@
 typedef unsigned char byte;
 
 // Sanctum header fields in DRAM
+// this key will later be used by sm
+// void sm_copy_key(void) from sm->platform.c
 extern byte sanctum_dev_public_key[32];
 extern byte sanctum_dev_secret_key[64];
 unsigned int sanctum_sm_size = 0x1ff000;

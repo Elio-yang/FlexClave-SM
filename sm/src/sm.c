@@ -51,8 +51,9 @@ static int osm_init(void)
 {
   int region = -1;
   // specify all memory region
+  // init from 0x0 - 0xffff...f
   int ret = pmp_region_init_atomic(0, -1UL, PMP_PRI_BOTTOM, &region, 1);
-  if(ret)
+  if(ret) 
     return -1;
 
   return region;
@@ -144,9 +145,16 @@ void sm_init(bool cold_boot)
       sbi_hart_hang();
     }
     // Copy the keypair from the root of trust
+    // this will get key from the bootloader in bootrom
+    // copy keys from sanctum TEE
+    // although current implememtation is just for test
+    // the workflow could be learnt. 
     sm_copy_key();
 
     // Init the enclave metadata
+    // Just specify some data as invalid
+    // not assigning the real region/enclave
+    // but the max number of enclave is defined as 16
     enclave_init_metadata();
 
     sm_init_done = 1;
@@ -166,8 +174,32 @@ void sm_init(bool cold_boot)
   pmp_init();
   
   // will reset the sm and os pmp region 
+  // based on the log, we have below layout:
+  // ----------------------------------------------
+  // SM:
+  // region_id: 0
+  // perm: ---
+  // mode: NAPOT
+  // address range: 0x80000000 - 0x80200000 [2MB]
+  // pmpaddr: 0x2003ffff
+  // pmpcfg: 0x18
+  // ----------------------------------------------
+  // OS:
+  // region_id: 7
+  // perm: rwx
+  // mode: NAPOT
+  // address range: 0x0 - 0xffffffffffffffff [ALL]
+  // pmpaddr: 0xffffffffffffffff
+  // pmpcfg: 0x1f00000000000000
+
   pmp_set_keystone(sm_region_id, PMP_NO_PERM);
   pmp_set_keystone(os_region_id, PMP_ALL_PERM);
+
+  // steps for creating a pmp region
+  // 1. acquire a region id, eg. smm_init()
+  // 2. pmp init, reset all pmpaddr and pmpcfg. only for the sm_init()
+  // 3. set pmp with corresponding addr, region and permission
+
 
   /* Fire platform specific global init */
   if (platform_init_global() != SBI_ERR_SM_ENCLAVE_SUCCESS) {

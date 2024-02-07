@@ -243,19 +243,25 @@ int pmp_set_keystone(int region_idx, uint8_t perm)
 
   uint8_t perm_bits = perm & PMP_ALL_PERM;
   pmpreg_id reg_idx = region_register_idx(region_idx);
+
+  // the api to set the pmpcfg register
   uintptr_t pmpcfg = region_pmpcfg_val(region_idx, reg_idx, perm_bits);
   uintptr_t pmpaddr;
 
   // this should be careful
+  // the api to set the pmpaddr register
+  // region_idx contain the start vaddr and perms
+  // and how the resgion size should match the field A
   pmpaddr = region_pmpaddr_val(region_idx);
 
-  //sbi_printf("pmp_set() [hart %d]: reg[%d], mode[%s], range[0x%lx-0x%lx], perm[0x%x]\r\n",
-  //       current_hartid(), reg_idx, (region_is_tor(region_idx) ? "TOR":"NAPOT"),
-  //       region_get_addr(region_idx), region_get_addr(region_idx) + region_get_size(region_idx), perm);
-  //sbi_printf("  pmp[%d] = pmpaddr: 0x%lx, pmpcfg: 0x%lx\r\n", reg_idx, pmpaddr, pmpcfg);
+  sbi_printf("pmp_set() [hart %d]: reg[%d], mode[%s], range[0x%lx-0x%lx], perm[0x%x]\r\n",
+        current_hartid(), reg_idx, (region_is_tor(region_idx) ? "TOR":"NAPOT"),
+        region_get_addr(region_idx), region_get_addr(region_idx) + region_get_size(region_idx), perm);
+
+  sbi_printf("  pmp[%d] = pmpaddr: 0x%lx, pmpcfg: 0x%lx\r\n", reg_idx, pmpaddr, pmpcfg);
 
   int n=reg_idx;
-
+  
   switch(n) {
 #define X(n,g) case n: { PMP_SET(n, g, pmpaddr, pmpcfg); break; }
   LIST_OF_PMP_REGS
