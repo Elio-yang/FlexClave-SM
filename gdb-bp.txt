@@ -1,0 +1,7 @@
+break sm_init
+break /home/jasony/Desktop/keystone/build-generic64/buildroot.build/build/opensbi-1.1/lib/sbi/sbi_ecall.c:70
+break /home/jasony/Desktop/keystone/build-generic64/buildroot.build/build/keystone-sm-30e5a086bf4192e4/src/sm.c:153
+break /home/jasony/Desktop/keystone/build-generic64/buildroot.build/build/keystone-sm-30e5a086bf4192e4/src/sm.c:166
+break /home/jasony/Desktop/keystone/build-generic64/buildroot.build/build/keystone-sm-30e5a086bf4192e4/src/sm.c:169
+break /home/jasony/Desktop/keystone/build-generic64/buildroot.build/build/keystone-sm-30e5a086bf4192e4/src/sm.c:170
+break pmp_init
