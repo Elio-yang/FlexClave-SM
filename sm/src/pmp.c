@@ -238,6 +238,9 @@ void pmp_init(void)
 
 int pmp_set_keystone(int region_idx, uint8_t perm)
 {
+  volatile int test_bits = 0xBBAD;
+  sbi_printf("[SM] trigger the pmp set in sm, test seed :%d\n",test_bits);
+
   if(!is_pmp_region_valid(region_idx))
     PMP_ERROR(SBI_ERR_SM_PMP_REGION_INVALID, "Invalid PMP region index");
 

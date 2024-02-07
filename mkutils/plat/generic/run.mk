@@ -7,7 +7,7 @@ QEMU_DBG_PORT   ?= $(shell echo $$(( $(QEMU_PORT) + 1)) )
 QEMU_DEBUG      := -gdb tcp::$(QEMU_DBG_PORT) -S
 
 QEMU_MEM        ?= 2G
-QEMU_SMP        ?= 4
+QEMU_SMP        ?= 2
 
 
 QEMU_FLAGS := -m $(QEMU_MEM) -smp $(QEMU_SMP) -nographic \

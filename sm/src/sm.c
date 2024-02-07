@@ -213,9 +213,9 @@ void sm_init(bool cold_boot)
 
 
   // let's try some pmp test here
-  sbi_printf("[SM] Performing some PMP tests here.\n")
+  sbi_printf("[SM] Performing some PMP tests here.\n");
   pmp_test();
-  sbi_printf("[SM] PMP Tests Done")
+  sbi_printf("[SM] PMP Tests Done\n");
 
   
   return;
@@ -226,7 +226,7 @@ void sm_init(bool cold_boot)
 
 void pmp_test(void)
 {
-  sbi_printf("PMP Test Starts.\n")
+  sbi_printf("PMP Test Starts.\n");
   // test-case 1: define my own 2 regions r-1 (high prv) and r-2 (low prv)
   // specify the adjacent location
   // print the pmp information
@@ -256,6 +256,6 @@ void pmp_test(void)
 
   /*TEST CASE 2 ENDS HERE*/
 
-  sbi_printf("PMP Test Ends.\n")
+  sbi_printf("PMP Test Ends.\n");
 
 }
