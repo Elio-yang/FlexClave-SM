@@ -25,4 +25,7 @@ int sm_derive_sealing_key(unsigned char *key,
                           const unsigned char *enclave_hash);
 
 int osm_pmp_set(uint8_t perm);
+
+// just for simple pmp tests
+void pmp_test(void);
 #endif

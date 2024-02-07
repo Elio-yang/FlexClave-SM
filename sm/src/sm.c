@@ -50,6 +50,7 @@ static int smm_init(void)
 static int osm_init(void)
 {
   int region = -1;
+  // specify all memory region
   int ret = pmp_region_init_atomic(0, -1UL, PMP_PRI_BOTTOM, &region, 1);
   if(ret)
     return -1;
@@ -158,10 +159,13 @@ void sm_init(bool cold_boot)
     mb();
   }
 
-  // pmp test here
+  
 
   /* below are executed by all harts */
+  // looks like this init will clean all pmp-regs
   pmp_init();
+  
+  // will reset the sm and os pmp region 
   pmp_set_keystone(sm_region_id, PMP_NO_PERM);
   pmp_set_keystone(os_region_id, PMP_ALL_PERM);
 
@@ -174,9 +178,52 @@ void sm_init(bool cold_boot)
   sbi_printf("[SM] Keystone security monitor has been initialized!\n");
 
   sm_print_hash();
-  
 
+
+  // let's try some pmp test here
+  sbi_printf("[SM] Performing some PMP tests here.\n")
+  pmp_test();
+  sbi_printf("[SM] PMP Tests Done")
+
+  
   return;
   // for debug
   // sm_print_cert();
+}
+
+
+void pmp_test(void)
+{
+  sbi_printf("PMP Test Starts.\n")
+  // test-case 1: define my own 2 regions r-1 (high prv) and r-2 (low prv)
+  // specify the adjacent location
+  // print the pmp information
+  // r-1 access r-2 memory location
+  // r-2 access r-1 memory location
+  /* TEST CASE 1 HERE*/
+  
+
+
+  /*TEST CASE 1 ENDS HERE*/
+
+  
+  // test-case 2: define some regions as below:
+  //             [*****]r2
+  //      [-----]r1
+  //[===========================================] OS
+  //[====][-----][*****][=======================] net memory
+  // test overflow case cross each boundary
+  // especially,
+  // os overflow to r1
+  // r1 overflow to r2
+  // r2 overflow to os
+  // test the range between each region
+  /*TEST CASE 2 HERE*/
+
+
+
+  /*TEST CASE 2 ENDS HERE*/
+
+  sbi_printf("PMP Test Ends.\n")
+
 }
